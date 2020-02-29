@@ -1,4 +1,4 @@
-# Hirashoes - Frontend
+# Hirashoes - Frontend :shirt:
 
 ## Sobre
 Projeto frontend para aplicação e-commerce **Hirashoes** desenvolvida para matéria de Laboratório de Engenharia de Software.
@@ -14,6 +14,11 @@ Execute o projeto
 yarn start or npm run start
 ```
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+
+### Autor :boy:
+Desenvolvido por @GabrielHirakawa, 2020.
+
 
 
 
