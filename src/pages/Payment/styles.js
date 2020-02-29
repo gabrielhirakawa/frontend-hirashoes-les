@@ -24,9 +24,9 @@ export const PaymentArea = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 20px 0px;
+    padding: 20px 20px;
     color: #fff;
-    width: 750px;
+    /* width: 750px; */
     border-radius: 4px;
     margin-top: 20px;
     color: #1b262c;
@@ -44,12 +44,22 @@ export const PaymentRadio = styled.div`
     }
 `;
 
+export const CardsQuantity = styled.div`
+    button{
+        padding: 10px;
+    }
+`;
+
+export const TwoCards = styled.div`
+    display: flex;
+`;
+
 export const Card = styled.form`
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    margin-top: 10px;
+    margin: 10px;
     width: 400px;
     input,select{
         border: 1px solid #c1c1c1;
@@ -86,6 +96,20 @@ export const PayButton = styled.button`
     padding: 10px;
     border-radius: 4px;
     width: 100%;
+    background-color: #27496d;
+    color: #fff;
+
+    &:hover{
+        background-color: #0c7b93; 
+    }
+`;
+
+export const PayButtonTwoCards = styled.button`
+    margin-top: 20px;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    width: 250px;
     background-color: #27496d;
     color: #fff;
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaSearch } from 'react-icons/fa';
 
 import { Container } from './styles';
 import MenuAdmin from '../../../components/MenuAdmin';
@@ -9,7 +10,10 @@ export default function Payments() {
             <MenuAdmin />
             <Container>
                 <h1>Histórico de vendas</h1>
-                <input type="text" placeholder="Número do pedido" />
+                <div>
+                    <input type="text" placeholder="Número do pedido" />
+                    <FaSearch size={34} />
+                </div>
                 <table border="1px">
                     <thead>
                         <tr>

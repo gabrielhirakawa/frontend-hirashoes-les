@@ -12,6 +12,11 @@ export default function NewProduct() {
         <Form>
             <input type="text" placeholder="Nome do produto" />
             <input type="text" placeholder="Preço do produto" />
+            <select>
+              <option>Calçados</option>
+              <option>Roupas</option>
+              <option>Acessórios</option>
+            </select>
             <input type="number" placeholder="Quantidade em estoque" />
             <textarea placeholder="Descrição" />
             <input type="file" />

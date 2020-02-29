@@ -15,7 +15,7 @@ export const Form = styled.form`
     justify-content: center;
     flex-direction: column;
     width: 400px;
-    input, button, textarea{
+    input, button, textarea, select {
         width: 100%;
         padding: 10px;
         border: none;

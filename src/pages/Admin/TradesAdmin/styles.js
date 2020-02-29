@@ -8,20 +8,8 @@ export const Container = styled.div`
     background-color: #1b262c;
     height: 80vh;
 
-    div{
-        display: flex;
-        align-items: center;
-
-        svg{
-            margin-left: 10px;
-        }
-    }
-
-    input{
-        margin: 20px 0px;
-        padding: 10px;
-        border: none;
-        border-radius: 4px;
+    h1{
+        margin-bottom: 30px;
     }
 
     table{
@@ -34,4 +22,6 @@ export const Container = styled.div`
             padding: 10px;
         }
     }
+    
 `;
+

@@ -17,6 +17,7 @@ import Payments from '../pages/Admin/Payments';
 import Coupons from '../pages/Admin/Coupons';
 import TradesAdmin from '../pages/Admin/TradesAdmin';
 import Analysis from '../pages/Admin/Analysis';
+import AdminDashboard from '../pages/Admin/AdminDashboard';
 
 export default function Routes(){
     return(
@@ -36,7 +37,7 @@ export default function Routes(){
                 <Route path="/payment" component={Payment} />
 
                 {/* Admin */}
-                <Route path="/admin" exact  />
+                <Route path="/admin" exact component={AdminDashboard} />
                 <Route path="/admin/newproduct" component={NewProduct} />
                 <Route path="/admin/payments" component={Payments} />
                 <Route path="/admin/analysis" component={Analysis} />
