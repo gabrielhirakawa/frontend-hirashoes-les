@@ -96,13 +96,12 @@ export const Cep = styled.div`
 
     button{
         padding: 10px !important;
-        /* height: 36px; */
         border: none;
         width: 30% !important;
         background-color: #27496d; 
         &:hover{
-        background-color: #0c7b93;
-    }
+            background-color: #0c7b93;
+        }
     }
 `;
 
@@ -121,10 +120,21 @@ export const ButtonUpdate = styled.button`
     }
 `;
 
-export const IdUser = styled.input`
-    width: 130px;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    margin-bottom: 10px;
+export const IdUser = styled.div`
+    
+    input{
+        width: 130px;
+        padding: 10px;
+        border: none;
+        margin-bottom: 10px;
+    }
+
+    button{
+        padding: 10px;
+        border: none;
+        background-color: #27496d; 
+        &:hover{
+            background-color: #0c7b93;
+        }
+    }
 `;

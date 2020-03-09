@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaTshirt, FaChartLine, FaMoneyBillAlt, FaCommentDollar, FaExchangeAlt } from 'react-icons/fa'
+import { FaTshirt, FaChartLine, FaMoneyBillAlt, FaCommentDollar, FaExchangeAlt, FaUserFriends } from 'react-icons/fa'
 
 import { Container, Item } from './styles';
 import { Link } from 'react-router-dom';
@@ -37,6 +37,12 @@ export default function MenuAdmin() {
                 <Item>
                     <FaExchangeAlt size={38} />
                     <span>Trocas</span>
+                </Item>
+            </Link>
+            <Link to="/admin/customers">
+                <Item>
+                    <FaUserFriends size={38} />
+                    <span>Clientes</span>
                 </Item>
             </Link>
         </Container>

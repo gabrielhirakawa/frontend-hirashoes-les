@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaTshirt, FaChartLine, FaMoneyBillAlt, FaCommentDollar, FaExchangeAlt } from 'react-icons/fa'
+import { FaTshirt, FaChartLine, FaMoneyBillAlt, FaCommentDollar, FaExchangeAlt, FaUserFriends } from 'react-icons/fa'
 
 
 import { Container, Item } from './styles';
@@ -40,6 +40,12 @@ export default function AdminDashboard() {
                 <Item>
                     <FaExchangeAlt size={80} />
                     <span>Trocas</span>
+                </Item>
+            </Link>
+            <Link to="/admin/customers">
+                <Item>
+                    <FaUserFriends size={80} />
+                    <span>Clientes</span>
                 </Item>
             </Link>
         </Container>

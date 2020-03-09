@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import Spinner from 'react-bootstrap/Spinner';
 import { isValid } from 'cpf';
@@ -31,6 +31,41 @@ export default function Account() {
   const [estado, setEstado] = useState('');
   const [pais, setPais] = useState('');
 
+
+  async function loadData() {
+    try {
+      const res = await api.get(`http://localhost:8080/clientes/${idUser}`);
+
+      const { data } = res;
+      const { entidades } = data;
+      if (!entidades[0].id) {
+        toast.error('Usuário não encontrado');
+        return;
+      }
+      setNome(entidades[0].nome);
+      setSobrenome(entidades[0].sobrenome);
+      setEmail(entidades[0].email);
+      setCpf(entidades[0].cpf);
+      setTelefone(entidades[0].telefones[0].numero);
+      setCep(entidades[0].enderecos[0].cep);
+      setRua(entidades[0].enderecos[0].rua);
+      setNumero(entidades[0].enderecos[0].numero);
+      setBairro(entidades[0].enderecos[0].bairro);
+      setComplemento(entidades[0].enderecos[0].complemento);
+      setCidade(entidades[0].enderecos[0].cidade);
+      setEstado(entidades[0].enderecos[0].estado);
+      setPais(entidades[0].enderecos[0].pais);
+
+    }
+    catch (e) {
+      toast.error('erro ao carregar dados da conta');
+      setLoading(0);
+      return;
+    }
+    setLoading(0);
+  }
+
+
   async function loadCEP() {
 
     if (cep.length < 8) {
@@ -47,24 +82,28 @@ export default function Account() {
   }
 
   function phoneMask(value) {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{2})(\d)/, '($1) $2')
-      .replace(/(\d{4})(\d)/, '$1-$2')
-      .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
-      .replace(/(-\d{4})\d+$/, '$1');
+    if (value) {
+      return value
+        .replace(/\D/g, '')
+        .replace(/(\d{2})(\d)/, '($1) $2')
+        .replace(/(\d{4})(\d)/, '$1-$2')
+        .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
+        .replace(/(-\d{4})\d+$/, '$1');
+    }
   }
 
   function cpfMask(value) {
-    return value
-      .replace(/\D/g, '') // substitui qualquer caracter que nao seja numero por nada
-      .replace(/(\d{3})(\d)/, '$1.$2') // captura 2 grupos de numero o primeiro de 3 e o segundo de 1, apos capturar o primeiro grupo ele adiciona um ponto antes do segundo grupo de numero
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-      .replace(/(-\d{2})\d+?$/, '$1'); // captura 2 numeros seguidos de um traço e não deixa ser digitado mais nada
+    if (value) {
+      return value
+        .replace(/\D/g, '') // substitui qualquer caracter que nao seja numero por nada
+        .replace(/(\d{3})(\d)/, '$1.$2') // captura 2 grupos de numero o primeiro de 3 e o segundo de 1, apos capturar o primeiro grupo ele adiciona um ponto antes do segundo grupo de numero
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+        .replace(/(-\d{2})\d+?$/, '$1'); // captura 2 numeros seguidos de um traço e não deixa ser digitado mais nada
+    }
   }
 
-  async function excluirConta(){
+  async function excluirConta() {
     try {
       const res = await api.delete(`http://localhost:8080/clientes/${idUser}`);
 
@@ -140,8 +179,13 @@ export default function Account() {
       <Menu />
       <Content>
         <h1>Meus dados</h1>
+
         <FormCadastro onSubmit={handleSubmit}>
-          <IdUser value={idUser} onChange={e => setIdUser(e.target.value)} type="text" placeholder="id do usuario" />
+          <IdUser>
+            <input value={idUser} onChange={e => setIdUser(e.target.value)} type="text" placeholder="id do usuario" />
+            <button type="button" onClick={() => loadData()}><FaSearch size={16} color="#fff" /></button>
+          </IdUser>
+
           <Dados>
             <DadosUsuario>
               <input type="text" required value={nome} onChange={e => setNome(e.target.value)} placeholder="Digite seu primeiro nome *" />
@@ -180,7 +224,7 @@ export default function Account() {
 
           </ButtonSalvar>
           <ButtonRemover type="button" onClick={() => excluirConta()}>
-          {
+            {
               loadingRemover
                 ? <Spinner animation="border" variant="light" size="sm" />
                 : <span>EXCLUIR CONTA</span>

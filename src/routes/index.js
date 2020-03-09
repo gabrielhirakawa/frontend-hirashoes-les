@@ -18,6 +18,7 @@ import Coupons from '../pages/Admin/Coupons';
 import TradesAdmin from '../pages/Admin/TradesAdmin';
 import Analysis from '../pages/Admin/Analysis';
 import AdminDashboard from '../pages/Admin/AdminDashboard';
+import Customers from '../pages/Admin/Customers';
 
 export default function Routes(){
     return(
@@ -43,6 +44,7 @@ export default function Routes(){
                 <Route path="/admin/analysis" component={Analysis} />
                 <Route path="/admin/coupons" component={Coupons} />
                 <Route path="/admin/trades" component={TradesAdmin} />
+                <Route path="/admin/customers" component={Customers} />
 
             </Switch>
 
