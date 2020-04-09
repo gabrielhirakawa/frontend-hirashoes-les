@@ -12,10 +12,9 @@ export const Content = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 80vh;
 
     h1{
-        margin-bottom: 20px;
+        margin: 20px 0;
     }
 `;
 
@@ -47,6 +46,10 @@ export const Item = styled.ul`
         justify-content: space-between;
         
         border-bottom: 1px solid #c1c1c1;
+
+        span{
+            width: 150px; 
+        }
 
         input{
             width: 60px;

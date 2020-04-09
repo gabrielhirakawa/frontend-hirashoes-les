@@ -23,7 +23,7 @@ export const Content = styled.div`
     justify-content: center;
     
     a {
-      margin-top: 30px;
+      margin: 30px 0px;
       color: #fff;
   }
     

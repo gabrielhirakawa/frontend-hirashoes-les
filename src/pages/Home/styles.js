@@ -12,7 +12,10 @@ export const ProductList = styled.ul`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+  width: 1200px;
   margin-top: 50px;
+  margin-bottom: 100px;
 
   li{
     border-radius: 4px;

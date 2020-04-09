@@ -1,38 +1,64 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
- 
+import { toast } from 'react-toastify';
+
 import { Container, ProductList } from './styles';
 import Menu from '../../components/Menu';
-import airforce from '../../assets/airforce.jpg'
-import airmax from '../../assets/airmax.png'
-import jordan from '../../assets/jordan.png'
+import apiNode from '../../services/api-node';
+
+
 
 export default function Home() {
-  return (
-    <Container>
-        <Menu />
-        <ProductList>
-            <li>
-            <img src={airforce} />
-               <strong>Tênis Air Force 1</strong>
-               <span>R$ 249,90</span>
-               <Link to="/product-detail"><button type="button">Ver produto</button></Link>
-            </li>
-            <li>
-            <img src={jordan} />
-               <strong>Tênis Air Jordan 4</strong>
-               <span>R$ 799,90</span>
-               <button type="button">Ver produto</button>
-            </li>
-            <li>
-            <img src={airmax} />
-               <strong>Tênis Air Max 90</strong>
-               <span>R$ 349,90</span>
-               <button type="button">Ver produto</button>
-            </li>
-            
 
-        </ProductList>
-    </Container>
-  );
+   const [produtos, setProdutos] = useState([]);
+   const [carrinho, setCarrinho] = useState([]);
+   const [carrinhoAction, setCarrinhoAction] = useState(false);
+
+   useEffect(() => {
+      async function loadInfo() {
+         const resp = await apiNode.get('/products');
+         const cart = localStorage.getItem('carrinho');
+         if (cart) {
+            setCarrinho(JSON.parse(cart));
+         }
+         setProdutos(resp.data);
+      }
+
+      loadInfo();
+   }, []);
+
+
+   return (
+      <Container>
+         <Menu />
+         <ProductList>
+            {
+               produtos.map(item =>
+                  (<li key={item.id}>
+                     <img src={item.url_img} />
+                     <strong>{item.nome}</strong>
+                     <span>{`R$ ${item.preco}`}</span>
+                     <button type="button" onClick={() => {
+                        const array = carrinho;
+
+                        for (let i = 0; i < carrinho.length; i++) {
+                           if (item.id === carrinho[i].id) {
+                              toast.warn('Esse produto já esta no carrinho');
+                              return;
+                           }
+                        }
+                        item.qtdeCarrinho = 1;
+                        array.push(item);
+                        setCarrinho(array);
+                        localStorage.setItem('carrinho', JSON.stringify(array));
+
+                     }} >Adicionar ao carrinho</button>
+                  </li>)
+               )
+            }
+
+
+         </ProductList>
+      </Container>
+   );
 }

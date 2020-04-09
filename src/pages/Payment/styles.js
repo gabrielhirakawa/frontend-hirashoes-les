@@ -12,10 +12,9 @@ export const Content = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 80vh;
 
     h1{
-        margin-bottom: 20px;
+        margin: 20px 0;
     }
 `;
 
@@ -26,9 +25,9 @@ export const PaymentArea = styled.div`
     flex-direction: column;
     padding: 20px 20px;
     color: #fff;
-    /* width: 750px; */
+    width: 900px;
     border-radius: 4px;
-    margin-top: 20px;
+    margin-bottom: 50px;
     color: #1b262c;
     background-color: #fff;
 `;
@@ -74,14 +73,41 @@ export const Card = styled.form`
     }
 
     div{
+        
+    }
+`;
+
+export const DivExpirationCard = styled.div`
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
         input{
-            width: 45%;
+            width: 30%;
         }
-    }
+`;
+
+export const DivCupom = styled.div`
+        width: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        input{
+            width: 70%;
+            height: 38px;
+        }
+        button{
+            height: 38px;
+            width: 30%;
+            border: none;
+            background-color: #27496d;
+            color: #fff;
+
+        &:hover{
+            background-color: #0c7b93; 
+        }
+        }
 `;
 
 export const SaveCard = styled.span`
@@ -95,7 +121,7 @@ export const PayButton = styled.button`
     border: none;
     padding: 10px;
     border-radius: 4px;
-    width: 100%;
+    width: 400px;
     background-color: #27496d;
     color: #fff;
 
@@ -116,4 +142,77 @@ export const PayButtonTwoCards = styled.button`
     &:hover{
         background-color: #0c7b93; 
     }
+`;
+
+export const LabelTotal = styled.label`
+    font-size: 24px;
+`;
+
+export const Enderecos = styled.ul`
+    list-style-type: none;
+    width: 700px;
+    
+    li{
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        background-color: #c1c1c1;
+        /* color: #fff; */
+        font-weight: bold;
+        padding: 15px;
+        margin: 10px 0;
+
+        input{
+            border: 1px solid #c1c1c1;
+            margin-right: 5px;
+        }
+    }
+`;
+
+export const FormEndereco = styled.form`
+    width: 700px;
+    margin-bottom: 20px;
+    div{
+        display: flex;
+        justify-content: space-between;
+        input{
+            width: 49%;
+        }
+    }
+    input{
+        border: 1px solid #c1c1c1;
+        border-radius: 4px;
+        box-shadow: none;
+        margin: 10px 0;
+        padding: 10px;
+        width: 100%;
+    }
+`;
+
+export const Cep = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    input{
+        width: 70% !important;
+        border-radius: 0px;
+    }
+
+    button{
+        padding: 10px !important;
+        /* height: 36px; */
+        border: none;
+        width: 30% !important;
+        background-color: #27496d; 
+        &:hover{
+        background-color: #0c7b93;
+    }
+    }
+`;
+
+export const Separator = styled.div`
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    border-bottom: 1px solid #c1c1c1;
 `;

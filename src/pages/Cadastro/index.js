@@ -78,8 +78,6 @@ export default function Cadastro() {
       .replace(/(-\d{2})\d+?$/, '$1'); // captura 2 numeros seguidos de um traço e não deixa ser digitado mais nada
   }
 
-
-
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(1);

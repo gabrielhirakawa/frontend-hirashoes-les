@@ -7,6 +7,7 @@ import Home from '../pages/Home';
 import Dashboard from '../pages/Dashboard';
 import Account from '../pages/Account';
 import Pedidos from '../pages/PedidosUser';
+import PedidoProcessado from '../pages/PedidoProcessado';
 import Cards from '../pages/Cards';
 import Cart from '../pages/Cart';
 import Trade from '../pages/Trade';
@@ -35,7 +36,8 @@ export default function Routes(){
                 <Route path="/trade" component={Trade} />
                 <Route path="/mycards" component={Cards} />
                 <Route path="/cart" component={Cart} />
-                <Route path="/payment" component={Payment} />
+                <Route path="/payment" exact component={Payment} />
+                <Route path="/payment/:codigo" component={PedidoProcessado} />
 
                 {/* Admin */}
                 <Route path="/admin" exact component={AdminDashboard} />

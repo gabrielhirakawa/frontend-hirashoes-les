@@ -35,3 +35,23 @@ export const Container = styled.div`
         }
     }
 `;
+
+export const Cards = styled.div`
+    display: flex;
+    /* flex-direction: column; */
+    margin-bottom: 20px;
+    div{
+        background-color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        flex-direction: column;
+        margin: 10px;
+        color: #000;
+        border-radius: 4px;
+        padding: 10px 20px;
+        span{
+            margin: 5px 0;
+        }
+    }
+
+`;
+
