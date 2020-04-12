@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route} from 'react-router-dom';
+import { BrowserRouter, Switch } from 'react-router-dom';
+import Route from './Route';
 
 import Login from '../pages/Login';
 import Cadastro from '../pages/Cadastro';
@@ -28,13 +29,13 @@ export default function Routes(){
                 <Route path="/" exact component={Home} />
                 <Route path="/products" component={Home} />
                 <Route path="/product-detail" component={ProductDetail} />
-                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/dashboard" isPrivate component={Dashboard} />
                 <Route path="/sessions" component={Login} />
                 <Route path="/register" component={Cadastro} />
-                <Route path="/account" component={Account} />
-                <Route path="/orders" component={Pedidos} />
+                <Route path="/account" isPrivate component={Account} />
+                <Route path="/myorders" isPrivate component={Pedidos} />
                 <Route path="/trade" component={Trade} />
-                <Route path="/mycards" component={Cards} />
+                <Route path="/mycards" isPrivate component={Cards} />
                 <Route path="/cart" component={Cart} />
                 <Route path="/payment" exact component={Payment} />
                 <Route path="/payment/:codigo" component={PedidoProcessado} />

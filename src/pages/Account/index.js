@@ -1,9 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Spinner from 'react-bootstrap/Spinner';
 import { isValid } from 'cpf';
 import { FaSearch } from 'react-icons/fa';
-import api from 'axios';
+import apiCorreios from 'axios';
+
+import apiNode from '../../services/api-node';
 
 
 import { Container, Content, FormCadastro, DadosUsuario, DadosEndereco, Dados, Cep, ButtonSalvar, IdUser, ButtonRemover } from './styles';
@@ -11,7 +13,8 @@ import Menu from '../../components/Menu';
 
 export default function Account() {
 
-  const [idUser, setIdUser] = useState('');
+  
+  const idUser = localStorage.getItem('user_id');
   const [loading, setLoading] = useState(0);
   const [loadingRemover, setLoadingRemover] = useState(0);
 
@@ -34,27 +37,27 @@ export default function Account() {
 
   async function loadData() {
     try {
-      const res = await api.get(`http://localhost:8080/clientes/${idUser}`);
+      const res = await apiNode.get(`users/${idUser}`);
 
       const { data } = res;
-      const { entidades } = data;
-      if (!entidades[0].id) {
+      const { id } = data;
+      if (!id) {
         toast.error('Usuário não encontrado');
         return;
       }
-      setNome(entidades[0].nome);
-      setSobrenome(entidades[0].sobrenome);
-      setEmail(entidades[0].email);
-      setCpf(entidades[0].cpf);
-      setTelefone(entidades[0].telefones[0].numero);
-      setCep(entidades[0].enderecos[0].cep);
-      setRua(entidades[0].enderecos[0].rua);
-      setNumero(entidades[0].enderecos[0].numero);
-      setBairro(entidades[0].enderecos[0].bairro);
-      setComplemento(entidades[0].enderecos[0].complemento);
-      setCidade(entidades[0].enderecos[0].cidade);
-      setEstado(entidades[0].enderecos[0].estado);
-      setPais(entidades[0].enderecos[0].pais);
+      setNome(data.nome);
+      setSobrenome(data.sobrenome);
+      setEmail(data.email);
+      setCpf(data.cpf);
+      setTelefone(data.telefones[0].numero);
+      setCep(data.enderecos[0].cep);
+      setRua(data.enderecos[0].rua);
+      setNumero(data.enderecos[0].numero);
+      setBairro(data.enderecos[0].bairro);
+      setComplemento(data.enderecos[0].complemento);
+      setCidade(data.enderecos[0].cidade);
+      setEstado(data.enderecos[0].estado);
+      setPais(data.enderecos[0].pais);
 
     }
     catch (e) {
@@ -65,6 +68,10 @@ export default function Account() {
     setLoading(0);
   }
 
+  useEffect(()=> {
+    loadData();
+  }, [])
+
 
   async function loadCEP() {
 
@@ -72,7 +79,7 @@ export default function Account() {
       toast.error("CEP inválido!")
     }
 
-    const resp = await api.get(`https://viacep.com.br/ws/${cep}/json/`);
+    const resp = await apiCorreios.get(`https://viacep.com.br/ws/${cep}/json/`);
     const { data } = resp;
     setCidade(data.localidade);
     setEstado(data.uf);
@@ -105,7 +112,7 @@ export default function Account() {
 
   async function excluirConta() {
     try {
-      const res = await api.delete(`http://localhost:8080/clientes/${idUser}`);
+      const res = await apiNode.delete(`http://localhost:8080/clientes/${idUser}`);
 
       toast.success("Sua conta foi excluída com sucesso!");
     }
@@ -142,7 +149,7 @@ export default function Account() {
 
 
     try {
-      const res = await api.put(`http://localhost:8080/clientes/${idUser}`, {
+      const res = await apiNode.put(`http://localhost:8080/clientes/${idUser}`, {
         nome,
         sobrenome,
         email,
@@ -181,10 +188,7 @@ export default function Account() {
         <h1>Meus dados</h1>
 
         <FormCadastro onSubmit={handleSubmit}>
-          <IdUser>
-            <input value={idUser} id="input-search" onChange={e => setIdUser(e.target.value)} type="text" placeholder="id do usuario" />
-            <button type="button" id="btn-search" onClick={() => loadData()}><FaSearch size={16} color="#fff" /></button>
-          </IdUser>
+         
 
           <Dados>
             <DadosUsuario>

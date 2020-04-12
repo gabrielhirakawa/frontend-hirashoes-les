@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Container, Content, Cards, CardItem } from './styles';
 import Menu from '../../components/Menu';
 
-export default function Dashboard() {
+export default function Dashboard({ history }) {
     return (
         <Container>
             <Menu />
@@ -31,6 +31,10 @@ export default function Dashboard() {
                         </CardItem>
                     </Link>
                 </Cards>
+                <button onClick={() => { 
+                    localStorage.removeItem('token');
+                    history.push('/sessions');
+                    }}>Sair</button>
             </Content>
         </Container>
     );
