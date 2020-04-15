@@ -11,9 +11,11 @@ import Pedidos from '../pages/PedidosUser';
 import PedidoProcessado from '../pages/PedidoProcessado';
 import Cards from '../pages/Cards';
 import Cart from '../pages/Cart';
-import Trade from '../pages/Trade';
+import Trade from '../pages/SolicitarTroca';
 import ProductDetail from '../pages/ProductDetail';
 import Payment from '../pages/Payment';
+import TrocasUser from '../pages/TrocasUser';
+
 import NewProduct from '../pages/Admin/NewProduct';
 import Payments from '../pages/Admin/Payments';
 import Coupons from '../pages/Admin/Coupons';
@@ -21,6 +23,7 @@ import TradesAdmin from '../pages/Admin/TradesAdmin';
 import Analysis from '../pages/Admin/Analysis';
 import AdminDashboard from '../pages/Admin/AdminDashboard';
 import Customers from '../pages/Admin/Customers';
+
 
 export default function Routes(){
     return(
@@ -34,8 +37,10 @@ export default function Routes(){
                 <Route path="/register" component={Cadastro} />
                 <Route path="/account" isPrivate component={Account} />
                 <Route path="/myorders" isPrivate component={Pedidos} />
-                <Route path="/trade" component={Trade} />
                 <Route path="/mycards" isPrivate component={Cards} />
+                <Route path="/mytrades" isPrivate component={TrocasUser} />
+                <Route path="/trade/:pedido/:produto" component={Trade} />
+                
                 <Route path="/cart" component={Cart} />
                 <Route path="/payment" exact component={Payment} />
                 <Route path="/payment/:codigo" component={PedidoProcessado} />

@@ -15,7 +15,10 @@ export const Content = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 80vh;
+
+    h1{
+        margin-top: 50px;
+    }
     
     a {
       margin-top: 30px;

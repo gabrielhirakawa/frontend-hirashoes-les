@@ -14,13 +14,7 @@ export const Content = styled.div`
     justify-content: center;
     height: 80vh;
 
-    button{
-        margin-top: 20px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-    }
-
+   
     h1{
         margin-bottom: 20px;
     }
@@ -56,6 +50,24 @@ export const CardItem = styled.div`
     }
 
     &:hover{
+        background-color:  #27496d;
+        svg{
+            color: #fff;
+        }
+        span{
+            color: #fff;
+        }
+    }
+`;
+
+export const ButtonLoggout = styled.button`
+        
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        
+     &:hover{
         background-color:  #27496d;
         svg{
             color: #fff;

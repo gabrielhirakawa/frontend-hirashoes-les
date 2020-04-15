@@ -1,8 +1,8 @@
 import React from 'react';
-import { FaUser, FaTruck, FaCreditCard } from 'react-icons/fa';
+import { FaUser, FaTruck, FaCreditCard, FaExchangeAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-import { Container, Content, Cards, CardItem } from './styles';
+import { Container, Content, Cards, CardItem, ButtonLoggout } from './styles';
 import Menu from '../../components/Menu';
 
 export default function Dashboard({ history }) {
@@ -18,23 +18,29 @@ export default function Dashboard({ history }) {
                             <span>Meus Dados</span>
                         </CardItem>
                     </Link>
-                    <Link to="mycards">
+                    <Link to="/mycards">
                         <CardItem>
                             <FaCreditCard size={56} />
                             <span>Meus Cartões</span>
                         </CardItem>
                     </Link>
-                    <Link to="/orders">
+                    <Link to="/myorders">
                         <CardItem>
                             <FaTruck size={56} />
                             <span>Meus Pedidos</span>
                         </CardItem>
                     </Link>
+                    <Link to="/mytrades">
+                        <CardItem>
+                            <FaExchangeAlt size={56} />
+                            <span>Trocas/Devoluções</span>
+                        </CardItem>
+                    </Link>
                 </Cards>
-                <button onClick={() => { 
+                <ButtonLoggout onClick={() => { 
                     localStorage.removeItem('token');
                     history.push('/sessions');
-                    }}>Sair</button>
+                    }}><span>Sair</span></ButtonLoggout>
             </Content>
         </Container>
     );

@@ -20,7 +20,7 @@ export const Content = styled.div`
 `
 
 export const DetailItem = styled.div`
-    margin: 30px 0;
+    margin-top: 30px;
     background-color: #fff;
     color: #1b262c;
     border-radius: 4px;

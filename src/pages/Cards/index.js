@@ -19,7 +19,7 @@ export default function CardsPage() {
             setArrayCards(resp.data);
         }
         loadData();
-    }, [])
+    }, []);
 
     const [newCardVisible, setNewCardVisible] = useState(false);
     const [arrayCards, setArrayCards] = useState([]);

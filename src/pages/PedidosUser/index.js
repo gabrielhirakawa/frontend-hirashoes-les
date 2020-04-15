@@ -1,44 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Container, Content, Table, DetailItem } from './styles';
 import Menu from '../../components/Menu';
+import apiNode from '../../services/api-node';
+
 export default function PedidosUser() {
 
   const [detailVisible, setDetailVisible] = useState(false);
+  const [pedidos, setPedidos] = useState([]);
+  const [pedidoSelecionado, setPedidoSelecionado] = useState('');
+  const user_id = localStorage.getItem('user_id');
 
-  function renderDetails() {
-    return (
-      <DetailItem>
-        <h2>PEDIDO Nº H1R5044P</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Produto</th>
-              <th>Preço</th>
-              <th>#</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Tênis Air Force 1</td>
-              <td>249,90</td>
-              <td><Link to="/trade">Solicitar troca/devolução</Link></td>
-            </tr>
-            <tr>
-              <td>Tênis Air Jordan 4</td>
-              <td>799,90</td>
-              <td><Link to="/trade">Solicitar troca/devolução</Link></td>
-            </tr>
-          </tbody>
-        </table>
-        <div>
-          <span><strong>Total:</strong> </span>
-          <span>R$ 1049,80</span>
-        </div>
-      </DetailItem>
-    )
-  }
+  useEffect(() => {
+    async function loadData() {
+      const resp = await apiNode.get(`/users/${user_id}`).catch(e => toast.error('Erro ao buscar dados'));
+
+      setPedidos(resp.data.pedidos);
+    }
+    loadData();
+  }, []);
+
 
   return (
     <Container>
@@ -51,48 +34,69 @@ export default function PedidosUser() {
           <thead>
             <tr>
               <th>Código pedido</th>
-              <th>Data</th>
-              <th>Valor</th>
-              <th>Frete</th>
               <th>Pagamento</th>
+              <th>Total</th>
+              <th>Frete</th>
+              <th>Status</th>
               <th>#</th>
 
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>H1R5044P</td>
-              <td>24/02/2020</td>
-              <td>1049.80</td>
-              <td>0,00</td>
-              <td>VISA</td>
-              <td><button onClick={() => {
-                renderDetails();
-                setDetailVisible(1);
-              }}>Ver detalhes</button></td>
-            </tr>
-            <tr>
-              <td>H1R9045A</td>
-              <td>24/02/2020</td>
-              <td>249,90</td>
-              <td>19,90</td>
-              <td>Boleto</td>
-              <td>Ver detalhes</td>
-            </tr>
-            <tr>
-              <td>H1R9049B</td>
-              <td>24/02/2020</td>
-              <td>89,90</td>
-              <td>19,90</td>
-              <td>VISA</td>
-              <td>Ver detalhes</td>
-            </tr>
+            {
+              pedidos.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{item.codigo}</td>
+                  <td>{item.tipo}</td>
+                  <td>{`${item.total_com_desconto},00`}</td>
+                  <td>{item.frete}</td>
+                  <td>{item.status}</td>
+                  <td><button onClick={() => {
+                    setDetailVisible(!detailVisible);
+                    setPedidoSelecionado(index);
+                  }}>Ver detalhes</button></td>
+                </tr>
+              ))
+            }
+
           </tbody>
         </Table>
 
         {
           detailVisible ?
-            renderDetails()
+            (<DetailItem>
+              <h4>Código: {`${pedidos[pedidoSelecionado].codigo}`}</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Produto</th>
+                    <th>Preço</th>
+                    <th>#</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    pedidos[pedidoSelecionado].itens.map(item => (
+                      <tr key={item.id}>
+                        <td><img src={item.url_img} /></td>
+                        <td>{item.nome}</td>
+                        <td>{`${item.preco},00`}</td>
+                        <td><Link to={`/trade/${pedidos[pedidoSelecionado].id}/${item.id}`}>Solicitar troca/devolução</Link></td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+              <div>
+                <span><strong>Desconto:</strong> </span>
+                <span>{`R$ ${pedidos[pedidoSelecionado].desconto},00`}</span>
+              </div>
+              <div>
+                <span><strong>Total:</strong> </span>
+                <span>{`R$ ${pedidos[pedidoSelecionado].total_com_desconto},00`}</span>
+              </div>
+            </DetailItem>)
             :
             (<></>)
         }

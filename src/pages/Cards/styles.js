@@ -12,9 +12,10 @@ export const Content = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 80vh;
+    
 
     h1{
+        margin-top: 50px;
         margin-bottom: 20px;
     }
 `;
@@ -79,6 +80,7 @@ export const FormNewCard = styled.form`
 
 export const SaveCard = styled.button`
     margin-top: 10px;
+    margin-bottom: 50px;
     width: 100%;
     background-color: #27496d;
     border: none;
