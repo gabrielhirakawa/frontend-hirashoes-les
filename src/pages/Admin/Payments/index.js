@@ -3,13 +3,14 @@ import { FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import apiNode from '../../../services/api-node';
-import { Container, Cards } from './styles';
+import { Container, Cards, Test, Modal } from './styles';
 import MenuAdmin from '../../../components/MenuAdmin';
 
 export default function Payments() {
 
     const [pedidos, setPedidos] = useState([]);
     const [detailsCard, setDetailsCard] = useState([]);
+    const [detailsItens, setDetailsItens] = useState([]);
     const [detailsAtive, setDetailsAtive] = useState(false);
 
     useEffect(() => {
@@ -22,12 +23,46 @@ export default function Payments() {
 
     async function details(id) {
         const resp = await apiNode.get(`/pedidos/${id}`).catch(e => toast.error('Não foi possivel carregar'));
-        setDetailsCard(resp.data.cartoes);
-        console.log(resp.data.cartoes)
+        setDetailsCard(resp.data.pedido.cartoes);
+        setDetailsItens(resp.data.pedido.itens);
     }
 
     return (
         <>
+            {
+                detailsAtive ?
+                    (
+                        <Test>
+                            <Modal>
+                                <h3>Detalhes do pagamento</h3>
+                                <Cards>
+
+                                    {
+                                        detailsCard.map((item, index) => (
+                                            <div key={item.id}>
+                                                <h4>Cartão {index + 1}</h4>
+                                                <span>Número Cartão: {item.numero}</span>
+                                                <span>Titular: {item.nome_impresso}</span>
+                                                <span>Data Expiração: {item.data_expiracao}</span>
+                                                <span>Bandeira: {item.bandeira}</span>
+                                            </div>
+                                        ))
+                                    }
+                                    {
+
+                                    }
+                                    
+                                </Cards>
+                                <button type="button" onClick={() => setDetailsAtive(false)}>Fechar</button>
+                            </Modal>
+                            
+                    </Test>)
+                        
+                    :
+                    (<></>)
+
+            }
+
             <MenuAdmin />
             <Container>
                 <h1>Histórico de vendas</h1>
@@ -71,28 +106,7 @@ export default function Payments() {
 
                     </tbody>
                 </table>
-                
-                {
-                    detailsAtive ?
-                        (<><h3>Detalhes do pagamento</h3><Cards>
 
-                            {
-                                detailsCard.map((item, index) => (
-
-                                    <div key={item.id}>
-                                        <h4>Cartão {index + 1}</h4>
-                                        <span>Número Cartão: {item.numero}</span>
-                                        <span>Titular: {item.nome_impresso}</span>
-                                        <span>Data Expiração: {item.data_expiracao}</span>
-                                        <span>Bandeira: {item.bandeira}</span>
-                                    </div>
-                                ))
-                            }
-                        </Cards></>)
-                        :
-                        (<></>)
-
-                }
             </Container>
         </>
     );

@@ -29,6 +29,8 @@ import Menu from '../../components/Menu';
 
 export default function Payment({ history }) {
 
+    const user_id = localStorage.getItem('user_id');
+
     //endereco
     const [cep, setCep] = useState('');
     const [rua, setRua] = useState('');
@@ -68,7 +70,7 @@ export default function Payment({ history }) {
     useEffect(() => {
         async function loadEnderecos() {
             //busca endereço cadastrado
-            const resp = await apiNode.get(`/${1}/enderecos`).catch(e => toast.error('Não foi possível carregar endereços'));
+            const resp = await apiNode.get(`/${user_id}/enderecos`).catch(e => toast.error('Não foi possível carregar endereços'));
             setEnderecosCadastrados(resp.data);
         }
         loadEnderecos();
@@ -144,7 +146,7 @@ export default function Payment({ history }) {
                 toast.error('Preencha todos campos do endereço!')
                 return;
             }
-            const resp = await apiNode.post(`/${1}/enderecos`, {
+            const resp = await apiNode.post(`/${user_id}/enderecos`, {
                 cep,
                 rua,
                 numero,
@@ -171,7 +173,7 @@ export default function Payment({ history }) {
         }
 
         //cadastra cartão
-        let resp = await apiNode.post(`/${1}/cartoes`, {
+        let resp = await apiNode.post(`/${user_id}/cartoes`, {
             numero: numeroCartao1,
             cvv: ccvCartao1,
             nome_impresso: nomeCartao1,
@@ -181,7 +183,7 @@ export default function Payment({ history }) {
 
         const idCard1 = resp.data.cartao.id;
 
-        resp = await apiNode.post(`/${1}/cartoes`, {
+        resp = await apiNode.post(`/${user_id}/cartoes`, {
             numero: numeroCartao2,
             cvv: ccvCartao2,
             nome_impresso: nomeCartao2,
@@ -202,7 +204,7 @@ export default function Payment({ history }) {
         });
 
         const payload = {
-            user_id: 1,
+            user_id: user_id,
             endereco_id: idEndereco,
             frete,
             tipo: 'cartao',
@@ -225,8 +227,8 @@ export default function Payment({ history }) {
         const response = await apiNode.post('/pedidos', payload).catch(e => toast.error('erro ao processar'));
 
         const { data } = response;
-        
-        if(data.pedido){
+
+        if (data.pedido) {
             history.push(`/payment/${data.pedido.codigo}`)
         }
 
@@ -239,7 +241,7 @@ export default function Payment({ history }) {
             return;
         }
 
-        const resp = await apiNode.get(`/cupons/${cupom.toUpperCase()}`).catch(e => {
+        const resp = await apiNode.get(`/cupons/${cupom}`).catch(e => {
             toast.warn('Houve um problema ao buscar cupom');
             return;
         }
@@ -256,11 +258,11 @@ export default function Payment({ history }) {
             return;
         }
 
-        if (tipo === 'promocional') {
-            toast.success('Cupom adicionado com sucesso')
-            setCupomValor(valor);
-            setTotal(total - valor);
-        }
+
+        toast.success('Cupom adicionado com sucesso')
+        setCupomValor(valor);
+        setTotal(total - valor);
+
 
 
 

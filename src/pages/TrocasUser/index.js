@@ -59,7 +59,7 @@ export default function TrocasUser() {
 
           </tbody>
         </Table>
-        <h1>Meus cupons</h1>
+       
         
       </Content>
     </Container>

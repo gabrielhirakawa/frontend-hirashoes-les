@@ -5,11 +5,10 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: #1b262c;
-    height: 80vh;
+    
 
     h1{
-        margin-bottom: 30px;
+        margin: 30px 0;
     }
 
     table{
@@ -20,6 +19,16 @@ export const Container = styled.div`
 
         th, td{
             padding: 10px;
+        }
+
+        td{
+            svg{
+                cursor: pointer;
+                &:hover{
+                    color: #c1c1c1 !important;
+                
+                }
+            }
         }
     }
     

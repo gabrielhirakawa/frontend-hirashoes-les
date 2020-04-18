@@ -5,9 +5,10 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: #1b262c;
-    height: 80vh;
-    
+
+   h1{
+       margin-top: 50px;
+   }    
 `;
 
 
@@ -17,7 +18,7 @@ export const Form = styled.form`
     justify-content: center;
     flex-direction: column;
     width: 400px;
-    input, button, textarea{
+    input, button, select{
         width: 100%;
         padding: 10px;
         border: none;

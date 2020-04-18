@@ -5,7 +5,6 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: #1b262c;
     height: 80vh;
 
     div{
@@ -38,20 +37,50 @@ export const Container = styled.div`
 
 export const Cards = styled.div`
     display: flex;
-    /* flex-direction: column; */
-    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    
     div{
-        background-color: rgba(255, 255, 255, 0.9);
         display: flex;
         flex-direction: column;
-        margin: 10px;
+        margin: 0 10px;
         color: #000;
-        border-radius: 4px;
-        padding: 10px 20px;
         span{
             margin: 5px 0;
         }
     }
 
+`;
+
+export const Test = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(0, 0 ,0 , 0.7);
+    z-index: 2;
+
+        
+`;
+
+export const Modal = styled.div`
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        background-color: #fff;
+        width: 650px;
+        height: 280px;
+        h3{
+             color: #c1c1c1;   
+    }
+    button{
+        margin-top: 20px;
+    }
+    
 `;
 
