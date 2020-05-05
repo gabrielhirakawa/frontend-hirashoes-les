@@ -11,15 +11,10 @@ export const Container = styled.div`
         margin: 30px 0;
     }
 
-    table{
-        background-color: #fff;
-        padding: 10px;
-        border-radius: 4px;
-        color: #1b262c;
 
-        th, td{
-            padding: 10px;
-        }
+    table{
+        width: 800px;
+       background-color: #fff;
 
         td{
             svg{

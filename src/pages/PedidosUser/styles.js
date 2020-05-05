@@ -5,6 +5,11 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
 
+    table{
+       width: 700px;
+       background-color: #fff;
+   }
+
 `;
 
 export const Content = styled.div`
@@ -52,19 +57,27 @@ export const DetailItem = styled.div`
     }
 `;
 
-export const Table = styled.table`
-    background-color: #fff;
-    color: #1b262c;
-    border-radius: 4px;
-    
-    th, td{
-        padding: 10px;
-        border: 1px solid #1b262c; 
-        
-    }
+export const CircleStep = styled.div.attrs(props => ({
+    ative: props.ative,
+  }))`
+    display: flex;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    color: #fff;
+    background-color: ${props => props.ative ? '#649d66' : ' #c1c1c1'};
+    margin: 0 !important;
+`;
 
-    button{
-        border: none;
-        background: transparent;
-    }
-`
+
+export const Steps = styled.div`
+div{
+    display: flex;
+    flex-direction: column;
+    align-items: center !important;
+    justify-content: center !important;
+}
+`;
+

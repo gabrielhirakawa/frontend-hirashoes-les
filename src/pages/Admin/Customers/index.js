@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import api from 'axios';
+import { Table } from 'react-bootstrap';
 
 import { Container, InputSearch } from './styles';
 import MenuAdmin from '../../../components/MenuAdmin';
@@ -92,7 +93,7 @@ export default function TradesAdmin() {
             <FaSearch size={34} color="#fff" />
           </button>
         </form>
-        <table border="1px">
+        <Table striped bordered hover>
           <thead>
             <tr>
               <th>Código</th>
@@ -120,45 +121,8 @@ export default function TradesAdmin() {
               ))
             }
 
-            {/* 
-            <tr>
-              <td>29109201</td>
-              <td>02/02/2020</td>
-              <td>Gabriel Hirakawa</td>
-              <td>Troca</td>
-              <td>Insatisfação</td>
-              <td>Produto diferente da foto</td>
-              <td><TiTick color="green" size={26} /><TiTimes color="red" size={26} /></td>
-            </tr>
-            <tr>
-              <td>82912891</td>
-              <td>01/02/2020</td>
-              <td>Maria Flores</td>
-              <td>Devolução</td>
-              <td>Tamanho errado</td>
-              <td>Ficou muito grande</td>
-              <td><TiTick color="green" size={26} /><TiTimes color="red" size={26} /></td>
-            </tr>
-            <tr>
-              <td>72413290</td>
-              <td>28/01/2020</td>
-              <td>João Pedro</td>
-              <td>Devolução</td>
-              <td>Defeito de fabricação</td>
-              <td>Produto veio com defeito</td>
-              <td><TiTick color="green" size={26} /><TiTimes color="red" size={26} /></td>
-            </tr>
-            <tr>
-              <td>32416280</td>
-              <td>10/01/2020</td>
-              <td>Gabriel Hirakawa</td>
-              <td>Troca</td>
-              <td>Tamanho errado</td>
-              <td>Tênis ficou pequeno</td>
-              <td><TiTick color="green" size={26} /><TiTimes color="red" size={26} /></td>
-            </tr> */}
           </tbody>
-        </table>
+        </Table>
       </Container>
     </>
   );

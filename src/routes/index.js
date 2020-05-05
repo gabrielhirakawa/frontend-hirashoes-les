@@ -35,11 +35,12 @@ export default function Routes(){
                 <Route path="/dashboard" isPrivate component={Dashboard} />
                 <Route path="/sessions" component={Login} />
                 <Route path="/register" component={Cadastro} />
+                
                 <Route path="/account" isPrivate component={Account} />
                 <Route path="/myorders" isPrivate component={Pedidos} />
                 <Route path="/mycards" isPrivate component={Cards} />
                 <Route path="/mytrades" isPrivate component={TrocasUser} />
-                <Route path="/trade/:pedido/:produto" component={Trade} />
+                <Route path="/trade/:pedido/:produto/:qtde" isPrivate component={Trade} />
                 
                 <Route path="/cart" component={Cart} />
                 <Route path="/payment" exact component={Payment} />

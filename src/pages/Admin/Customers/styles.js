@@ -19,15 +19,9 @@ export const Container = styled.div`
     }
 
     table{
-        background-color: #fff;
-        padding: 10px;
-        border-radius: 4px;
-        color: #1b262c;
-
-        th, td{
-            padding: 10px;
-        }
-    }
+        width: 700px;
+       background-color: #fff;
+       }
     
 `;
 

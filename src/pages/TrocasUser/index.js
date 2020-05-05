@@ -40,7 +40,7 @@ export default function TrocasUser() {
               <th>Tipo</th>
               <th>Motivo</th>
               <th>Produto</th>
-              <th>Descrição</th>
+              <th>Quantidade</th>
               <th>Status</th>
               <th>#</th>
 
@@ -54,7 +54,7 @@ export default function TrocasUser() {
                   <td>{item.tipo}</td>
                   <td>{item.motivo}</td>
                   <td>{item.produto.nome}</td>
-                  <td>{item.descricao}</td>
+                  <td>{item.quantidade}</td>
                   <td>{item.status}</td>
                   <td></td>
                 </tr>

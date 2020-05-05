@@ -57,7 +57,7 @@ export default function Cart({ history }) {
                                         <li key={index}>
                                             <img src={item.url_img} alt="tenis" />
                                             <span>{item.nome}</span>
-                                            <input placeholder="Qtd" type="number" defaultValue={1} onChange={e => {
+                                            <input id="input-qtde" placeholder="Qtd" type="number" defaultValue={1} onChange={e => {
                                                 if (e.target.value >= 0) {
                                                     const array = produtos;
                                                     array[index].qtdeCarrinho = e.target.value;

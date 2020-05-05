@@ -32,8 +32,8 @@ export default function Login({ history }) {
       <Content>
         <img src={logo} alt="hirashoes" />
         <FormLogin onSubmit={handleSubmit}>
-          <input value={user} onChange={e => setUser(e.target.value)} type="email" placeholder="Digite seu e-mail" />
-          <input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Digite sua senha" />
+          <input id="input-login" value={user} onChange={e => setUser(e.target.value)} type="email" placeholder="Digite seu e-mail" />
+          <input id="input-senha" value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Digite sua senha" />
           <ButtonLogin type="submit">ENTRAR</ButtonLogin>
         </FormLogin>
         <Link to="/register">Criar minha conta</Link>

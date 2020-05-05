@@ -5,7 +5,8 @@ import { isValid } from 'cpf';
 import { FaSearch } from 'react-icons/fa';
 import apiCorreios from 'axios';
 
-import apiNode from '../../services/api-node';
+// import apiNode from '../../services/api-node';
+import api from 'axios';
 
 
 import { Container, Content, FormCadastro, DadosUsuario, DadosEndereco, Dados, Cep, ButtonSalvar, IdUser, ButtonRemover } from './styles';
@@ -37,27 +38,29 @@ export default function Account() {
 
   async function loadData() {
     try {
-      const res = await apiNode.get(`users/${idUser}`);
+      
+      const res = await api.get(`http://localhost:8080/clientes/${idUser}`);
 
-      const { data } = res;
-      const { id } = data;
-      if (!id) {
+      const { entidades } = res.data;
+
+      const user  = entidades[0];
+      if (!user) {
         toast.error('Usuário não encontrado');
         return;
       }
-      setNome(data.nome);
-      setSobrenome(data.sobrenome);
-      setEmail(data.email);
-      setCpf(data.cpf);
-      setTelefone(data.telefones[0].numero);
-      setCep(data.enderecos[0].cep);
-      setRua(data.enderecos[0].rua);
-      setNumero(data.enderecos[0].numero);
-      setBairro(data.enderecos[0].bairro);
-      setComplemento(data.enderecos[0].complemento);
-      setCidade(data.enderecos[0].cidade);
-      setEstado(data.enderecos[0].estado);
-      setPais(data.enderecos[0].pais);
+      setNome(user.nome);
+      setSobrenome(user.sobrenome);
+      setEmail(user.email);
+      setCpf(user.cpf);
+      setTelefone(user.telefones[0].numero);
+      setCep(user.enderecos[0].cep);
+      setRua(user.enderecos[0].rua);
+      setNumero(user.enderecos[0].numero);
+      setBairro(user.enderecos[0].bairro);
+      setComplemento(user.enderecos[0].complemento);
+      setCidade(user.enderecos[0].cidade);
+      setEstado(user.enderecos[0].estado);
+      setPais(user.enderecos[0].pais);
 
     }
     catch (e) {
@@ -112,7 +115,7 @@ export default function Account() {
 
   async function excluirConta() {
     try {
-      const res = await apiNode.delete(`http://localhost:8080/clientes/${idUser}`);
+      const res = await api.delete(`http://localhost:8080/clientes/${idUser}`);
 
       toast.success("Sua conta foi excluída com sucesso!");
     }
@@ -149,7 +152,7 @@ export default function Account() {
 
 
     try {
-      const res = await apiNode.put(`http://localhost:8080/clientes/${idUser}`, {
+      const res = await api.put(`http://localhost:8080/clientes/${idUser}`, {
         nome,
         sobrenome,
         email,

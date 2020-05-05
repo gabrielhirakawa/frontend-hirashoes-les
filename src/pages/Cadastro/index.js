@@ -144,23 +144,23 @@ export default function Cadastro() {
         <FormCadastro onSubmit={handleSubmit}>
           <Dados>
             <DadosUsuario>
-              <input type="text" required value={nome} onChange={e => setNome(e.target.value)} placeholder="Digite seu primeiro nome *" />
-              <input type="text" required value={sobrenome} onChange={e => setSobrenome(e.target.value)} placeholder="Digite seu sobrenome *" />
-              <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="Digite seu e-mail *" />
-              <input type="text" required value={phoneMask(telefone)} onChange={e => setTelefone(e.target.value)} placeholder="Digite seu telefone *" />
-              <input type="text" required value={cpfMask(cpf)} onChange={e => setCpf(e.target.value)} placeholder="Digite seu CPF *" />
-              <input type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="Digite sua senha *" />
-              <input type="password" required value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirme sua senha *" />
+              <input type="text" id="input-name" required value={nome} onChange={e => setNome(e.target.value)} placeholder="Digite seu primeiro nome *" />
+              <input type="text" id="input-lastname" required value={sobrenome} onChange={e => setSobrenome(e.target.value)} placeholder="Digite seu sobrenome *" />
+              <input type="email" id="input-email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="Digite seu e-mail *" />
+              <input type="text" id="input-tel" required value={phoneMask(telefone)} onChange={e => setTelefone(e.target.value)} placeholder="Digite seu telefone *" />
+              <input type="text" id="input-cpf" required value={cpfMask(cpf)} onChange={e => setCpf(e.target.value)} placeholder="Digite seu CPF *" />
+              <input type="password" id="input-pass" required value={password} onChange={e => setPassword(e.target.value)} placeholder="Digite sua senha *" />
+              <input type="password" id="input-pass2" required value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirme sua senha *" />
             </DadosUsuario>
 
             <DadosEndereco>
               <Cep>
-                <input type="text" required maxLength="8" value={cep} onChange={e => setCep(e.target.value)} placeholder="Digite seu CEP *" />
+                <input id="input-cep" type="text" required maxLength="8" value={cep} onChange={e => setCep(e.target.value)} placeholder="Digite seu CEP *" />
                 <button type="button" onClick={() => loadCEP()}><FaSearch size={16} color="#fff" /></button>
               </Cep>
               <input type="text" required value={rua} onChange={e => setRua(e.target.value)} placeholder="Rua *" />
               <div>
-                <input type="text" required value={numero} onChange={e => setNumero(e.target.value)} placeholder="Número *" />
+                <input id="input-numero" type="text" required value={numero} onChange={e => setNumero(e.target.value)} placeholder="Número *" />
                 <input type="text" required value={bairro} onChange={e => setBairro(e.target.value)} placeholder="Bairro *" />
               </div>
               <input type="text" value={complemento} onChange={e => setComplemento(e.target.value)} placeholder="Complemento" />

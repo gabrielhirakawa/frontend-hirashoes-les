@@ -5,7 +5,6 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 80vh;
 
     div{
         display: flex;
@@ -24,15 +23,9 @@ export const Container = styled.div`
     }
 
     table{
-        background-color: #fff;
-        padding: 10px;
-        border-radius: 4px;
-        color: #1b262c;
-
-        th, td{
-            padding: 10px;
-        }
-    }
+       width: 850px;
+       background-color: #fff;
+   }
 `;
 
 export const Cards = styled.div`
@@ -74,7 +67,7 @@ export const Modal = styled.div`
         width: 100%;
         background-color: #fff;
         width: 650px;
-        height: 280px;
+        height: 350px;
         h3{
              color: #c1c1c1;   
     }
@@ -82,5 +75,25 @@ export const Modal = styled.div`
         margin-top: 20px;
     }
     
+`;
+
+export const StatusEntrega = styled.div`
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #000;
+
+    label, button{
+        margin: 0px !important;
+    }
+`;
+
+export const StatusStep = styled.select`
+    color: #000;
+    font-size: 16px;
+    border-radius: 4px;
+    margin: 5px;
 `;
 

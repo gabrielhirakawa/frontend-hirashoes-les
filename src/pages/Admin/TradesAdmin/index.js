@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { TiTick, TiTimes } from 'react-icons/ti'
+import { TiTick, TiTimes } from 'react-icons/ti';
+import { Table } from 'react-bootstrap';
 
 import apiNode from '../../../services/api-node';
 import { Container } from './styles';
@@ -21,8 +22,23 @@ export default function TradesAdmin() {
     load();
   }, []);
 
-  async function aprovar(user_id, troca_id) {
-    const resp = await apiNode.put(`${user_id}/trocas/${troca_id}`, { status: 'aprovada' }).catch(e => toast.error('Erro ao carregar'));
+  async function aprovar(user_id, troca_id, preco, quantidade, status) {
+
+    if(status==='aprovada'){
+      toast.warn('Essa troca já foi aprovada');
+      return;
+    }
+
+    let resp = await apiNode.put(`${user_id}/trocas/${troca_id}`, { status: 'aprovada' }).catch(e => toast.error('Erro ao carregar'));
+
+    resp = await apiNode.post('/cupons', {
+      codigo: `TROCA${troca_id}-${user_id}`,
+      tipo: 'troca',
+      valor: preco*quantidade,
+      user_id,
+  }).catch(e => toast.error('Erro ao criar cupom'));
+
+
     if (resp) {
       toast.success('Aprovado com sucesso')
     }
@@ -40,15 +56,16 @@ export default function TradesAdmin() {
       <MenuAdmin />
       <Container>
         <h1>Trocas/Devoluções pendentes</h1>
-        <table border="1px">
+        <Table striped bordered hover >
           <thead>
             <tr>
-              <th>Cod</th>
+              <th>Cod. Pedido</th>
               <th>Tipo</th>
               <th>Motivo</th>
-              <th>Descrição</th>
+              <th>Preço</th>
               <th>Status</th>
               <th>Produto</th>
+              <th>Quantidade</th>
               <th>Cliente id</th>
               <th>#</th>
             </tr>
@@ -60,12 +77,13 @@ export default function TradesAdmin() {
                   <td>{item.pedido.codigo}</td>
                   <td>{item.tipo}</td>
                   <td>{item.motivo}</td>
-                  <td>{item.descricao}</td>
+                  <td>{item.produto.preco}</td>
                   <td>{item.status}</td>
                   <td>{item.produto.nome}</td>
+                  <td>{item.quantidade}</td>
                   <td>{item.user_id}</td>
                   <td>
-                    <TiTick color="green" size={26} onClick={() => aprovar(item.user_id, item.id)} />
+                    <TiTick color="green" size={26} onClick={() => aprovar(item.user_id, item.id, item.produto.preco, item.quantidade, item.status)} />
                     <TiTimes color="red" size={26} onClick={() => recusar(item.user_id, item.id)} />
                   </td>
                 </tr>
@@ -73,7 +91,7 @@ export default function TradesAdmin() {
             }
 
           </tbody>
-        </table>
+        </Table>
       </Container>
     </>
   );
