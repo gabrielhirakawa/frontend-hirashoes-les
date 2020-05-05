@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Table } from 'react-bootstrap';
 
-import { Container, Content, Table, DetailItem } from './styles';
+import { Container, Content, DetailItem } from './styles';
 import Menu from '../../components/Menu';
 import apiNode from '../../services/api-node';
 
 export default function TrocasUser() {
 
-  const [detailVisible, setDetailVisible] = useState(false);
+
   const [trocas, setTrocas] = useState([]);
+  const [cupons, setCupons] = useState([]);
   const user_id = localStorage.getItem('user_id');
 
   useEffect(() => {
     async function loadData() {
       const resp = await apiNode.get(`/${user_id}/trocas`).catch(e => toast.error('Erro ao buscar dados'));
 
+      const user = await apiNode.get(`/users/${user_id}`).catch(e => toast.error('Erro ao buscar dados'));
+
+      setCupons(user.data.cupons);
       setTrocas(resp.data);
     }
     loadData();
@@ -29,7 +33,7 @@ export default function TrocasUser() {
         <h1>
           Minhas Solicitações
         </h1>
-        <Table border>
+        <Table striped bordered hover>
           <thead>
             <tr>
               <th>Pedido</th>
@@ -59,8 +63,32 @@ export default function TrocasUser() {
 
           </tbody>
         </Table>
-       
-        
+
+        <h2>Cupons de Troca</h2>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>ID Cupom</th>
+              <th>Código</th>
+              <th>valor</th>
+              <th>utilizado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              cupons.map(item => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.codigo}</td>
+                  <td>{item.valor.toFixed(2)}</td>
+                  <td>{item.utilizado  === false ? 'não' : 'sim'}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </Table>
+
+
       </Content>
     </Container>
   );

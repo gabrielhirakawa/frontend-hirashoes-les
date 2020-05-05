@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
+import { findBrand } from 'creditcard-identifier';
 import { toast } from 'react-toastify';
 
 import api from 'axios';
@@ -19,6 +20,7 @@ import {
     PayButtonTwoCards,
     CardsQuantity,
     DivExpirationCard,
+    DivCupons,
     DivCupom,
     FormEndereco,
     Cep,
@@ -43,13 +45,21 @@ export default function Payment({ history }) {
 
     // auxiliar
     const [total, setTotal] = useState(0);
-    const [totalCompras, setTotalCompras] = useState(0);
-    const [cupom, setCupom] = useState('');
-    const [cupomValor, setCupomValor] = useState(0);
+    const [totalInicial, setTotalInicial] = useState(0);
+    const [totalComFrete, setTotalComFrete] = useState(0);
     const [enderecosCadastrados, setEnderecosCadastrados] = useState([]);
     const [enderecoSelecionado, setEnderecoSelecionado] = useState('new');
     const [frete, setFrete] = useState(10);
     const [produtosCart, setProdutosCart] = useState([]);
+
+    //cupons
+    const [cupons, setCupons] = useState([]);
+    const [tipoCupom, setTipoCupom] = useState('');
+    const [recalcularCupom, setRecalcularCupom] = useState(false);
+    const [cupomTroca, setCupomTroca] = useState(0);
+    const [cupomPromocional, setCupomPromocional] = useState('');
+    const [cupomPromocionalValor, setCupomPromocionalValor] = useState(0);
+    const [valorCupomSelecionado, setValorCupomSelecionado] = useState(0);
 
     // cartoes
     const [numeroCartao1, setNumeroCartao1] = useState('');
@@ -66,11 +76,35 @@ export default function Payment({ history }) {
     const [anoCartao2, setAnoCartao2] = useState('');
     const [valorCartao2, setValorCartao2] = useState(0);
 
+    useEffect(() => {
+        var val = 0;
+        if(tipoCupom === 'promocional'){
+            val = totalInicial * (Number(cupomPromocionalValor)/100); 
+            setValorCupomSelecionado(val);
+        }
+        if(tipoCupom === 'troca'){
+            val = Number(cupomTroca);
+            setValorCupomSelecionado(val)
+        }
+        if(tipoCupom === 'nenhum'){
+            setValorCupomSelecionado(0)
+        }
+        
+        setTotal(totalComFrete - val);
+        
+    }, [recalcularCupom, tipoCupom])
+
     // carrega informações iniciais
     useEffect(() => {
         async function loadEnderecos() {
             //busca endereço cadastrado
             const resp = await apiNode.get(`/${user_id}/enderecos`).catch(e => toast.error('Não foi possível carregar endereços'));
+
+            const user = await apiNode.get(`/users/${user_id}`).catch(e => toast.error('Erro ao buscar dados'));
+
+            if (user.data) {
+                setCupons(user.data.cupons);
+            }
             setEnderecosCadastrados(resp.data);
         }
         loadEnderecos();
@@ -86,8 +120,9 @@ export default function Payment({ history }) {
             });
 
             setProdutosCart(cart);
-            setTotalCompras(valor + frete);
+            setTotalComFrete(valor + frete);
             setTotal(valor + frete);
+            setTotalInicial(valor);
         }
     }, []);
 
@@ -140,6 +175,17 @@ export default function Payment({ history }) {
     async function finalizarCompra() {
         let idEndereco = enderecoSelecionado;
 
+        var brand1 = null;
+        var brand2 = null;
+        try {
+            brand1 = findBrand(numeroCartao1);
+            brand2 = findBrand(numeroCartao2);
+        }
+        catch (e) {
+            toast.error('Cartão não identificado');
+            return;
+        }
+
         // cadastrar novo endereço
         if (enderecoSelecionado === 'new') {
             if (!cep || !numero) {
@@ -178,7 +224,7 @@ export default function Payment({ history }) {
             cvv: ccvCartao1,
             nome_impresso: nomeCartao1,
             data_expiracao: `${mesCartao1}/${anoCartao1}`,
-            bandeira: 'master'
+            bandeira: brand1
         });
 
         const idCard1 = resp.data.cartao.id;
@@ -188,7 +234,7 @@ export default function Payment({ history }) {
             cvv: ccvCartao2,
             nome_impresso: nomeCartao2,
             data_expiracao: `${mesCartao2}/${anoCartao2}`,
-            bandeira: 'visa'
+            bandeira: brand2
         });
 
         const idCard2 = resp.data.cartao.id;
@@ -203,22 +249,30 @@ export default function Payment({ history }) {
             });
         });
 
+        //calcula valor selecionado 
+        const parcelasCartao1 = valorCartao1 ? valorCartao1 : 1
+        const parcelasCartao2 = valorCartao2 ? valorCartao1 : 1
+        const totalCartao1 = valorCartao1 ? ((total / 2) / valorCartao1).toFixed(2) : ((total / 2)).toFixed(2)
+        const totalCartao2 = valorCartao2 ? ((total / 2) / valorCartao2).toFixed(2) : ((total / 2)).toFixed(2)
+
         const payload = {
             user_id: user_id,
             endereco_id: idEndereco,
             frete,
             tipo: 'cartao',
-            total: totalCompras,
+            total: totalInicial,
             total_com_desconto: total,
-            desconto: cupomValor ? cupomValor : 0,
+            // desconto: cupomValor ? cupomValor : 0,
             cartoes: [
                 {
                     cartao_id: idCard1,
-                    valor: valorCartao1 ? valorCartao1 : Math.round(total / 2)
+                    parcelas: parcelasCartao1,
+                    valor: totalCartao1
                 },
                 {
                     cartao_id: idCard2,
-                    valor: valorCartao2 ? valorCartao2 : Math.round(total / 2)
+                    parcelas: parcelasCartao2,
+                    valor: totalCartao2
                 }
             ],
             produtos: produtosTratados,
@@ -236,12 +290,7 @@ export default function Payment({ history }) {
 
     async function buscaCupom() {
 
-        if (cupomValor) {
-            toast.warn('Só é possível usar apenas um cupom por compra');
-            return;
-        }
-
-        const resp = await apiNode.get(`/cupons/${cupom}`).catch(e => {
+        const resp = await apiNode.get(`/cupons/${cupomPromocional}`).catch(e => {
             toast.warn('Houve um problema ao buscar cupom');
             return;
         }
@@ -251,7 +300,7 @@ export default function Payment({ history }) {
             return;
         }
 
-        const { status, valor, tipo } = resp.data;
+        const { status, percentual_desconto } = resp.data;
 
         if (status !== 'ativo') {
             toast.warn('Cupom expirado');
@@ -259,12 +308,9 @@ export default function Payment({ history }) {
         }
 
 
-        toast.success('Cupom adicionado com sucesso')
-        setCupomValor(valor);
-        setTotal(total - valor);
-
-
-
+        toast.success('Cupom encontrado com sucesso!');
+        setCupomPromocionalValor(percentual_desconto);
+        setRecalcularCupom(!recalcularCupom);
 
 
     }
@@ -319,48 +365,94 @@ export default function Payment({ history }) {
                     <h3>2 - Pague em até 2 cartões!</h3>
                     <TwoCards>
                         <Card>
-                            <input value={numeroCartao1} onChange={e => setNumeroCartao1(e.target.value)} type="text" placeholder="Card Number" />
+                            <input required maxLength={16} value={numeroCartao1} onChange={e => setNumeroCartao1(e.target.value)} type="text" placeholder="Card Number" />
                             <DivExpirationCard>
-                                <input value={ccvCartao1} onChange={e => setCcvCartao1(e.target.value)} type="text" placeholder="CVV" />
-                                <input value={mesCartao1} onChange={e => setMesCartao1(e.target.value)} type="text" placeholder="Mês" />
-                                <input value={anoCartao1} onChange={e => setAnoCartao1(e.target.value)} type="text" placeholder="Ano" />
+                                <input required maxLength={3} value={ccvCartao1} onChange={e => setCcvCartao1(e.target.value)} type="text" placeholder="CVV" />
+                                <input required maxLength={2} value={mesCartao1} onChange={e => setMesCartao1(e.target.value)} type="text" placeholder="Mês" />
+                                <input required maxLength={4} value={anoCartao1} onChange={e => setAnoCartao1(e.target.value)} type="text" placeholder="Ano" />
                             </DivExpirationCard>
-                            <input value={nomeCartao1} onChange={e => setNomeCartao1(e.target.value)} type="text" placeholder="Name on Card" />
+                            <input required value={nomeCartao1} onChange={e => setNomeCartao1(e.target.value)} type="text" placeholder="Name on Card" />
                             <select value={valorCartao1} onChange={e => setValorCartao1(e.target.value)}>
-                                <option value={Math.round(total / 2)}>{`1x de R$ ${(total / 2)}`}</option>
-                                <option value={Math.round((total / 2) / 2)}>{`2x de R$ ${((total / 2) / 2).toFixed(2)}`}</option>
-                                <option value={Math.round((total / 2) / 3)}>{`3x de R$ ${((total / 2) / 3).toFixed(2)}`}</option>
-                                <option value={Math.round((total / 2) / 4)}>{`4x de R$ ${((total / 2) / 4).toFixed(2)}`}</option>
+                                <option value={1}>{`1x de R$ ${(total / 2).toFixed(2)}`}</option>
+                                <option value={2}>{`2x de R$ ${((total / 2) / 2).toFixed(2)}`}</option>
+                                <option value={3}>{`3x de R$ ${((total / 2) / 3).toFixed(2)}`}</option>
+                                <option value={4}>{`4x de R$ ${((total / 2) / 4).toFixed(2)}`}</option>
                             </select>
 
                         </Card>
 
                         <Card>
-                            <input value={numeroCartao2} onChange={e => setNumeroCartao2(e.target.value)} type="text" placeholder="Card Number" />
+                            <input required maxLength={16} value={numeroCartao2} onChange={e => setNumeroCartao2(e.target.value)} type="text" placeholder="Card Number" />
                             <DivExpirationCard>
-                                <input value={ccvCartao2} onChange={e => setCcvCartao2(e.target.value)} type="text" placeholder="CVV" />
-                                <input value={mesCartao2} onChange={e => setMesCartao2(e.target.value)} type="text" placeholder="Mês" />
-                                <input value={anoCartao2} onChange={e => setAnoCartao2(e.target.value)} type="text" placeholder="Ano" />
+                                <input required maxLength={3} value={ccvCartao2} onChange={e => setCcvCartao2(e.target.value)} type="text" placeholder="CVV" />
+                                <input required maxLength={2} value={mesCartao2} onChange={e => setMesCartao2(e.target.value)} type="text" placeholder="Mês" />
+                                <input required maxLength={4} value={anoCartao2} onChange={e => setAnoCartao2(e.target.value)} type="text" placeholder="Ano" />
                             </DivExpirationCard>
-                            <input value={nomeCartao2} onChange={e => setNomeCartao2(e.target.value)} type="text" placeholder="Name on Card" />
+                            <input required value={nomeCartao2} onChange={e => setNomeCartao2(e.target.value)} type="text" placeholder="Name on Card" />
                             <select value={valorCartao2} onChange={e => setValorCartao2(e.target.value)}>
-                                <option value={Math.round((total / 2))}>{`1x de R$ ${(total / 2)}`}</option>
-                                <option value={Math.round((total / 2) / 2)}>{`2x de R$ ${((total / 2) / 2).toFixed(2)}`}</option>
-                                <option value={Math.round((total / 2) / 3)}>{`3x de R$ ${((total / 2) / 3).toFixed(2)}`}</option>
-                                <option value={Math.round((total / 2) / 4)}>{`4x de R$ ${((total / 2) / 4).toFixed(2)}`}</option>
+                                <option value={1}>{`1x de R$ ${(total / 2).toFixed(2)}`}</option>
+                                <option value={2}>{`2x de R$ ${((total / 2) / 2).toFixed(2)}`}</option>
+                                <option value={3}>{`3x de R$ ${((total / 2) / 3).toFixed(2)}`}</option>
+                                <option value={4}>{`4x de R$ ${((total / 2) / 4).toFixed(2)}`}</option>
                             </select>
 
                         </Card>
                     </TwoCards>
 
                     <Separator />
-                    <DivCupom>
-                        <input value={cupom} onChange={e => setCupom(e.target.value)} type="text" placeholder="Cupom" />
-                        <button type="button" onClick={() => buscaCupom()} ><FaSearch size={16} color="#fff" /></button>
-                    </DivCupom>
-                    <LabelTotal>Total {`R$ ${total},00`}</LabelTotal>
-                    <span>Frete {`R$ ${frete},00`}</span>
-                    <span>Desconto {`R$ ${cupomValor},00`}</span>
+                    <h3>3 - Cupons</h3>
+                    <DivCupons>
+                        <div>
+                            <div>
+                                <input onChange={() => setTipoCupom('promocional')} type="radio" name="cupons" />
+                                <label>Usar Cupom promocional</label>
+                            </div>
+                            <DivCupom>
+                                <input value={cupomPromocional} onChange={e => setCupomPromocional(e.target.value)} type="text" placeholder="Cupom Promocional" />
+                                <button type="button" onClick={() => {
+                                    buscaCupom();
+                                    }} ><FaSearch size={16} color="#fff" /></button>
+                            </DivCupom>
+                            {
+                                cupomPromocionalValor ?
+                                (<label><strong>Cupom: </strong>{`${cupomPromocionalValor}% de desconto = ${(totalInicial * (cupomPromocionalValor/100)).toFixed(2)}`}</label>)
+                                :
+                                (<></>)
+                            }
+                        </div>
+                        <div>
+                            <div>
+                                <input onChange={() => setTipoCupom('troca')} type="radio" name="cupons" />
+                                <label>Usar Cupom de troca</label>
+
+                            </div>
+                            <select defaultValue={cupomTroca} onChange={e => {
+                                setCupomTroca(e.target.value);
+                                setRecalcularCupom(!recalcularCupom);
+                            }}>
+                                <option value={0}>-- Selecione um cupom --</option>
+                                {
+                                    cupons.map(item => {
+                                        if (!item.utilizado) {
+                                            return <option value={item.valor} key={item.id}>{`${item.codigo} - ${item.valor.toFixed(2)}`}</option>
+                                        }
+                                    })
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <div>
+                                <input onChange={() => setTipoCupom('nenhum')} type="radio" name="cupons" />
+                                <label>Não usar cupom</label>
+                            </div>
+                        </div>
+                    </DivCupons>
+                    <Separator />
+                    <span>Total carrinho {`R$ ${totalInicial.toFixed(2)}`}</span>
+                    <span> - Desconto {`R$ ${valorCupomSelecionado.toFixed(2)}`}</span>
+                    <span> + Frete {`R$ ${frete.toFixed(2)}`}</span>
+                    <LabelTotal>Total {`R$ ${total.toFixed(2)}`}</LabelTotal>
+                    
                     <PayButton type='button' onClick={() => finalizarCompra()}>Realizar pagamento</PayButton>
 
                 </PaymentArea>

@@ -3069,6 +3069,11 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+creditcard-identifier@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/creditcard-identifier/-/creditcard-identifier-1.1.0.tgz#0e5ce7c05206cd979ea38e65b09cb81d3e05a268"
+  integrity sha1-DlznwFIGzZeeo45lsJy4HT4Fomg=
+
 cross-spawn@7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.1.tgz#0ab56286e0f7c24e153d04cc2aa027e43a9a5d14"

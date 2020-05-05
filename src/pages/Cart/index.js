@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Container, Content, MyCart, Item, Total, ButtonFinalizar } from './styles';
 import Menu from '../../components/Menu';
 
 
-export default function Cart() {
+export default function Cart({ history }) {
 
     const [produtos, setProdutos] = useState([]);
     const [total, setTotal] = useState(0);
@@ -78,7 +79,7 @@ export default function Cart() {
                                                 localStorage.setItem('carrinho', JSON.stringify(array));
                                             }
                                             }>Remover item</button>
-                                            <span>{item.preco}</span>
+                                            <span>{item.preco.toFixed(2)}</span>
                                         </li>
                                     ))
                                 }
@@ -89,14 +90,20 @@ export default function Cart() {
                     }
                     <Total>
                         <span>Total:</span>
-                        <span>{`R$ ${total},00`}</span>
+                        <span>{`R$ ${total.toFixed(2)}`}</span>
                     </Total>
 
-                    <Link to="/payment">
-                        <ButtonFinalizar>
+                    
+                        <ButtonFinalizar type="button" onClick={() => {
+                            if(total === 0){
+                                toast.error('Carrinho vazio');
+                                return;
+                            }
+                            history.push('/payment');
+                        }}>
                             Finalizar Pedido
                         </ButtonFinalizar>
-                    </Link>
+                    
 
                 </MyCart>
             </Content>

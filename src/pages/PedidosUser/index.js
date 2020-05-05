@@ -48,7 +48,7 @@ export default function PedidosUser() {
                 <tr key={item.id}>
                   <td>{item.codigo}</td>
                   <td>{item.tipo}</td>
-                  <td>{`${item.total_com_desconto},00`}</td>
+                  <td>{`${item.total_com_desconto.toFixed(2)}`}</td>
                   <td>{item.frete}</td>
                   <td>{item.status}</td>
                   <td><button onClick={() => {
@@ -81,7 +81,7 @@ export default function PedidosUser() {
                       <tr key={item.id}>
                         <td><img src={item.url_img} /></td>
                         <td>{item.nome}</td>
-                        <td>{`${item.preco},00`}</td>
+                        <td>{`${item.preco.toFixed(2)}`}</td>
                         <td><Link to={`/trade/${pedidos[pedidoSelecionado].id}/${item.id}`}>Solicitar troca/devolução</Link></td>
                       </tr>
                     ))
@@ -90,11 +90,19 @@ export default function PedidosUser() {
               </table>
               <div>
                 <span><strong>Desconto:</strong> </span>
-                <span>{`R$ ${pedidos[pedidoSelecionado].desconto},00`}</span>
+                <span>{`R$ ${pedidos[pedidoSelecionado].desconto.toFixed(2)}`}</span>
+              </div>
+              <div>
+                <span><strong>Frete:</strong> </span>
+                <span>{`R$ ${pedidos[pedidoSelecionado].frete.toFixed(2)}`}</span>
+              </div>
+              <div>
+                <span><strong>Total carrinho:</strong> </span>
+                <span>{`R$ ${(pedidos[pedidoSelecionado].total - pedidos[pedidoSelecionado].frete).toFixed(2)}`}</span>
               </div>
               <div>
                 <span><strong>Total:</strong> </span>
-                <span>{`R$ ${pedidos[pedidoSelecionado].total_com_desconto},00`}</span>
+                <span>{`R$ ${pedidos[pedidoSelecionado].total_com_desconto.toFixed(2)}`}</span>
               </div>
             </DetailItem>)
             :

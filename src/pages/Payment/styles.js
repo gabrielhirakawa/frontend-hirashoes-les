@@ -87,12 +87,39 @@ export const DivExpirationCard = styled.div`
         }
 `;
 
-export const DivCupom = styled.div`
-        width: 400px;
+export const DivCupons = styled.div`
         display: flex;
-        align-items: center;
+        width: 700px;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 50px;
+
+        div{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+
+            div{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 10px;
+                label{
+                    margin: 0px 5px;
+                }
+            }
+       }
+
+        select{
+            width: 250px;
+            height: 38px;
+        }
+`;
+
+export const DivCupom = styled.div`
+        width: 250px;
+        
+        
         input{
             width: 70%;
             height: 38px;

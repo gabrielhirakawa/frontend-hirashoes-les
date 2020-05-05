@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { FaTrash } from 'react-icons/fa';
+import { findBrand } from 'creditcard-identifier';
 
-import { Container, Content, Cards, CardItem, AddCard, FormNewCard, SaveCard } from './styles';
+import { Container, Content, Cards, Card, CardItem, AddCard, FormNewCard, SaveCard } from './styles';
 
 import apiNode from '../../services/api-node';
 import Menu from '../../components/Menu';
@@ -11,6 +13,15 @@ import master from '../../assets/card-master.jpg';
 export default function CardsPage() {
 
     const user_id = localStorage.getItem('user_id');
+    const [newCardVisible, setNewCardVisible] = useState(false);
+    const [arrayCards, setArrayCards] = useState([]);
+
+    //new card
+    const [nomeImpresso, setNomeImpresso] = useState('');
+    const [numeroCartao, setNumeroCartao] = useState('');
+    const [anoCartao, setAnoCartao] = useState('');
+    const [mesCartao, setMesCartao] = useState('');
+    const [cvv, setCvv] = useState('');
 
     useEffect(() => {
         async function loadData() {
@@ -21,49 +32,86 @@ export default function CardsPage() {
         loadData();
     }, []);
 
-    const [newCardVisible, setNewCardVisible] = useState(false);
-    const [arrayCards, setArrayCards] = useState([]);
+
+    async function saveCard(e) {
+        e.preventDefault();
+        var brand = null;
+        try{
+            brand = findBrand(numeroCartao);
+        }
+        catch(e){
+            toast.error('Cartão não identificado');
+            return;
+        }
+        
+        const card = {
+            numero: numeroCartao,
+            cvv: cvv,
+            nome_impresso: nomeImpresso,
+            data_expiracao: `${mesCartao}/${anoCartao}`,
+            bandeira: brand
+        }
+        const resp = await apiNode.post(`/${user_id}/cartoes`, card).catch(e => toast.error('Erro ao salvar cartão'));
+
+        const { data } = resp;
+
+        if (data) {
+            toast.success('Cartão inserido com sucesso!');
+            window.location.reload();
+
+        }
+    }
+
+    async function removeCard(cartaoId) {
+        const resp = await apiNode.delete(`/${user_id}/cartoes/${cartaoId}`).catch(e => toast.error('Erro ao remover cartão'));
+
+        const { data } = resp;
+
+        if (data) {
+            toast.success('Cartão removido com sucesso!');
+            window.location.reload();
+        }
+    }
+
 
     return (
         <Container>
             <Menu />
             <Content>
                 <h1>Meus cartões</h1>
-                <Cards>
-                    {
-                        arrayCards.map(item => (
-                            <CardItem>
-                                <span>{item.numero}</span>
-                                <span>{item.nome_impresso}</span>
-                                <span>{item.data_expiracao}</span>
-                                <img src={item.bandeira === 'master' ? master : visa} />
-                            </CardItem>
-                        ))
-                    }
-                    {/* <CardItem>
-                        <span>
-                            **** **** **** 2890
-                    </span>
-                        <img src={visa} />
-                    </CardItem>
-                    <CardItem>
-                        <span>
-                            **** **** **** 1429
-                    </span>
-                        <img src={master} />
-                    </CardItem> */}
-                </Cards>
+                {
+                    arrayCards ?
+                        (<Cards>
+                            {
+                                arrayCards.map(item => (
+                                    <Card  key={item.id}>
+                                        <CardItem>
+                                            <span>{item.numero}</span>
+                                            <span>{item.nome_impresso}</span>
+                                            <span>{item.data_expiracao}</span>
+                                            <img src={item.bandeira === 'master' ? master : visa} />
+                                        </CardItem>
+                                        <FaTrash size={20} onClick={() => removeCard(item.id)} />
+                                    </Card>
+                                ))
+                            }
+
+                        </Cards>)
+                        :
+                        (<></>)
+                }
                 <AddCard onClick={() => setNewCardVisible(1)}>Adicionar novo</AddCard>
                 {
                     newCardVisible ?
-                        (<FormNewCard>
-                            <input type="text" placeholder="Card Number" />
+                        (<FormNewCard onSubmit={saveCard}>
+                            <input required value={numeroCartao} maxLength={16} onChange={e => setNumeroCartao(e.target.value)} placeholder="Card Number" />
                             <div>
-                                <input type="text" placeholder="CVV" />
-                                <input type="date" placeholder="Expiry Date" />
+                                <input required value={cvv} maxLength={3} onChange={e => setCvv(e.target.value)} placeholder="CVV" />
+                                <input required value={mesCartao} maxLength={2} onChange={e => setMesCartao(e.target.value)} placeholder="Mês" />
+                                <input required value={anoCartao} maxLength={4} onChange={e => setAnoCartao(e.target.value)} placeholder="Ano" />
                             </div>
-                            <input type="text" placeholder="Name on Card" />
-                            <SaveCard>Salvar Cartão</SaveCard>
+                            <input required value={nomeImpresso} onChange={e => setNomeImpresso(e.target.value)} placeholder="Name on Card" />
+                            <SaveCard type="submit">Salvar Cartão</SaveCard>
                         </FormNewCard>)
                         :
                         (<></>)

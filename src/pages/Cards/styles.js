@@ -24,8 +24,21 @@ export const Cards = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: 400px;
+    width: 500px;
+   
 `
+
+export const Card = styled.div`
+    display: flex;
+    align-items: center;
+
+    svg{
+        &:hover{
+            color: #c1c1c1;
+            cursor: pointer;
+        }
+    }
+`;
 
 export const CardItem = styled.div`
     display: flex;
@@ -35,7 +48,7 @@ export const CardItem = styled.div`
     border-radius: 4px;
     color: #1b262c;
     padding: 20px 10px;
-    width: 100%;
+    width: 400px;
     margin: 10px;
 
     img{
@@ -73,7 +86,7 @@ export const FormNewCard = styled.form`
         align-items: center;
         justify-content: space-between;
         input{
-            width: 45%;
+            width: 30%;
         }
     }
 `;

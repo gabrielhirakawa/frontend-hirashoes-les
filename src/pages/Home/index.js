@@ -37,7 +37,7 @@ export default function Home() {
                   (<li key={item.id}>
                      <img src={item.url_img} />
                      <strong>{item.nome}</strong>
-                     <span>{`R$ ${item.preco}`}</span>
+                     <span>{`R$ ${item.preco.toFixed(2)}`}</span>
                      <button type="button" onClick={() => {
                         const array = carrinho;
 
@@ -50,6 +50,7 @@ export default function Home() {
                         item.qtdeCarrinho = 1;
                         array.push(item);
                         setCarrinho(array);
+                        toast.success('Esse produto foi adicionado ao carrinho');
                         localStorage.setItem('carrinho', JSON.stringify(array));
 
                      }} >Adicionar ao carrinho</button>

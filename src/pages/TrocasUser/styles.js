@@ -5,6 +5,11 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
 
+    table{
+       width: 700px;
+       background-color: #fff;
+   }
+
 `;
 
 export const Content = styled.div`
@@ -52,19 +57,19 @@ export const DetailItem = styled.div`
     }
 `;
 
-export const Table = styled.table`
-    background-color: #fff;
-    color: #1b262c;
-    border-radius: 4px;
+// export const Table = styled.table`
+//     background-color: #fff;
+//     color: #1b262c;
+//     border-radius: 4px;
     
-    th, td{
-        padding: 10px;
-        border: 1px solid #1b262c; 
+//     th, td{
+//         padding: 10px;
+//         border: 1px solid #1b262c; 
         
-    }
+//     }
 
-    button{
-        border: none;
-        background: transparent;
-    }
-`
+//     button{
+//         border: none;
+//         background: transparent;
+//     }
+// `
