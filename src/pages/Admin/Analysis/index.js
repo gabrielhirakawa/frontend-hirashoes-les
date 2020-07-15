@@ -1,49 +1,98 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from 'chart.js';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-import { Container } from './styles';
+import { Container, Filtro } from './styles';
+import api from '../../../services/api-node';
 import MenuAdmin from '../../../components/MenuAdmin';
 
 export default function Analysis() {
   const chartRef = React.createRef();
+  const [startDate, setStartDate] = useState(new Date(2020, 0, 1));
+  const [endDate, setEndDate] = useState(new Date(2021, 0, 1));
+
+  const [statusGraph, setStatusGraph] = useState(false);
+  const [listaFiltrada, setListaFiltrada] = useState([]);
+  const [meses, setMeses] = useState([]);
+
+  useEffect(() => {
+    async function load() {
+      const res = await api.post('/analise', {
+        startDate: '2020-01-01 00:00:05.003+00',
+        endDate: '2021-01-01 00:00:05.003+00'
+      });
+
+      setListaFiltrada(res.data.arrayProdutos);
+      setMeses(res.data.labels);
+      setStatusGraph(!statusGraph);
+    }
+
+    load();
+  }, [])
+
+  async function filtrar() {
+    const res = await api.post('/analise', {
+      startDate,
+      endDate
+    });
+
+    setListaFiltrada(res.data.arrayProdutos);
+    setMeses(res.data.labels);
+    setStatusGraph(!statusGraph);
+  }
 
   useEffect(() => {
     let ctx = document.getElementsByClassName("line-chart");
 
+    const labels = [];
+    listaFiltrada.map(item => {
+      labels.push(item.nome)
+    })
+
+    const colors = [
+      "rgba(6, 204, 90, 0.85)",
+      "rgba(77, 166, 253, 0.85)",
+      "rgba(255, 204, 0, 0.85)",
+      "rgba(204, 0, 255, 0.85)",
+      "rgba(255, 102, 0, 0.85)",
+      "rgba(0, 255, 255, 0.85)",
+      "rgba(102, 102, 51, 0.85)"
+
+    ]
+
+    const datasets = []
+    listaFiltrada.map((item, i) => {
+      if (item.quantidade.length > 0) {
+        const data = {
+          label: item.nome,
+          borderWidth: 6,
+          data: item.quantidade,
+          borderColor: colors[i],
+          // backgroundColor: colors[i]
+        }
+        datasets.push(data);
+      }
+    });
+
+    if(datasets.length> 0){
+      datasets.map((item, index) => {
+        for (let i = 0; i < item.data.length; i++) {
+          if(item.data[i] == null){
+            datasets[index].data[i] = 0;
+          }
+        }
+      });
+    }
+
+
+    console.log(datasets)
     //type, data e options
     let chartGraph = new Chart(ctx, {
       type: "line",
       data: {
-        labels: [
-          "Jan",
-          "Fev",
-          "Mar",
-          "Abr",
-          "Mai",
-          "Jun",
-          "Jul",
-          "Ago",
-          "Set",
-          "Out",
-          "Nov",
-          "Dez"
-        ],
-        datasets: [
-          {
-            label: "Vendas mensais 2019",
-            data: [2, 6, 4, 11, 20, 10, 7, 22, 19, 11, 10, 10, 8],
-            borderWidth: 6,
-            borderColor: "rgba(6, 204, 90, 0.85)",
-            backgroundColor: "transparent"
-          },
-          {
-            label: "Vendas mensais 2020",
-            data: [5, 10, 20, 30, 40, 46, 20, 11, 29, 22, 10, 12, 18],
-            borderWidth: 6,
-            borderColor: "rgba(77, 166, 253, 0.85)",
-            backgroundColor: "transparent"
-          }
-        ]
+        labels: meses,
+        datasets,
       },
       options: {
         title: {
@@ -57,11 +106,18 @@ export default function Analysis() {
       }
     });
 
-  }, [])
+  }, [statusGraph]);
+
   return (
     <>
       <MenuAdmin />
       <Container>
+        <Filtro>
+          <DatePicker id="input-inicio" selected={startDate} onChange={date => setStartDate(date)} dateFormat="MM/yyyy" showMonthYearPicker />
+          <label><strong>Entre</strong></label>
+          <DatePicker id="input-fim" selected={endDate} onChange={date => setEndDate(date)} dateFormat="MM/yyyy" showMonthYearPicker />
+          <button type="button" onClick={() => filtrar()}>Filtrar</button>
+        </Filtro>
 
         <canvas className="line-chart"></canvas>
 

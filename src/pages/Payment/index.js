@@ -450,7 +450,7 @@ export default function Payment({ history }) {
                                 {
                                     cupons.map(item => {
                                         if (!item.utilizado) {
-                                            return <option value={`${item.id} ${item.valor}`} key={item.id}>{`${item.codigo} - ${item.valor.toFixed(2)}`}</option>
+                                            return <option id="cp-troca" value={`${item.id} ${item.valor}`} key={item.id}>{`${item.codigo}`}</option>
                                         }
                                     })
                                 }
